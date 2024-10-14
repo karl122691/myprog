@@ -22,32 +22,18 @@ public class StoreWithConfirmDialogue {
         do {
             boolean nextCustomer = true;
 
-            // Overall sales data for end of day
             String[] items = {"Pencils@PHP 5.00", "Ballpoint Pens@PHP 10.00", "Notebooks@PHP 50.00", "Sharpeners@PHP 15.00", "Erasers@PHP 5.00"};
             double[] prices = {5.00, 10.00, 50.00, 15.00, 5.00};
             double allCost = 0.0;
             int totalTransactions = 0;
             int[] totalItemQuantities = new int[items.length];
-            double[] totalItemSales = new double[items.length]; // Track total sales per item
+            double[] totalItemSales = new double[items.length];
             NEXTCUST:
             do {
                 int Enter = JOptionPane.showConfirmDialog(null, "Enter?", "Welcome to Karl's Bookstore!", JOptionPane.YES_NO_OPTION);
                 switch (Enter) {
                     case -1 -> {
-                        int asdas = closeButton();
-                        switch (asdas) {
-                            case -1: {
-                                nextCustomer = true;
-                                break;
-                            }
-                            case 0: {
-                                break RUNNING;
-                            }
-                            case 1: {
-                                nextCustomer = true;
-                                break;
-                            }
-                        }
+                        break RUNNING;
                     }
                     case 0 -> {
                         ArrayList<String> cartItems = new ArrayList<>();
@@ -57,7 +43,7 @@ public class StoreWithConfirmDialogue {
                         boolean Browsing = true;
                         BROWSING:
                         do {
-                            // Use showOptionDialog to present item choices as buttons
+
                             int choice = JOptionPane.showOptionDialog(
                                     null,
                                     "Choose an item to buy or remove from your cart:",
@@ -70,23 +56,10 @@ public class StoreWithConfirmDialogue {
 
                             switch (choice) {
                                 case -1 -> {
-                                    int ujkuik = closeButton();
-                                    switch (ujkuik) {
-                                        case -1: {
-                                            nextCustomer = true;
-                                            break;
-                                        }
-                                        case 0: {
-                                            break RUNNING;
-                                        }
-                                        case 1: {
-                                            nextCustomer = true;
-                                            break;
-                                        }
-                                    }
+                                    break RUNNING;
                                 }
                                 case 0 -> {
-                                    // Add item
+
                                     int itemChoice = JOptionPane.showOptionDialog(
                                             null,
                                             "Choose an item to add:",
@@ -96,43 +69,14 @@ public class StoreWithConfirmDialogue {
                                             null,
                                             items, null);
                                     if (itemChoice == -1) {
-                                        int rtyrty = closeButton();
-                                        switch (rtyrty) {
-                                            case -1: {
-                                                Browsing = true;
-                                            }
-                                            case 0: {
-                                                if (!cartItems.isEmpty()) {
-                                                    int unfin = unfinished();
-                                                    switch (unfin) {
-                                                        case -1: {
-                                                            Browsing = true;
-                                                            break;
-                                                        }
-                                                        case 0: {
-                                                            break NEXTCUST;
-                                                        }
-                                                        case 1: {
-                                                            clearCart(cartItems, cartQuantities, cartCosts);
-                                                            break BROWSING;
-                                                        }
-                                                    }
-                                                } else {
-                                                    break RUNNING;
-                                                }
-                                            }
-                                            case 1: {
-                                                Browsing = true;
-                                            }
-                                        }
+                                        break RUNNING;
                                     }
-                                    if (itemChoice >= 0 && itemChoice <= 4) {  // Valid item selected
+                                    if (itemChoice >= 0 && itemChoice <= 4) {
                                         String itemName = items[itemChoice];
                                         double itemCost = prices[itemChoice];
 
                                         String quantityStr = JOptionPane.showInputDialog("You selected " + itemName + ". Enter the quantity:");
                                         if (quantityStr == null) {
-                                            // User clicked "Cancel" or closed the dialog
                                             JOptionPane.showMessageDialog(null, "You canceled the quantity input. No item was added to the cart.");
                                             break;
                                         }
@@ -141,19 +85,16 @@ public class StoreWithConfirmDialogue {
                                         if (quantity > 0) {
                                             boolean itemExistsInCart = false;
 
-                                            // Check if the item is already in the cart
                                             for (int i = 0; i < cartItems.size(); i++) {
                                                 if (cartItems.get(i).equals(itemName)) {
-                                                    // Update the existing item in the cart
+
                                                     cartQuantities.set(i, cartQuantities.get(i) + quantity);
                                                     cartCosts.set(i, cartCosts.get(i) + itemCost * quantity);
                                                     itemExistsInCart = true;
                                                     break;
                                                 }
                                             }
-
                                             if (!itemExistsInCart) {
-                                                // If item not found, add it as a new item
                                                 cartItems.add(itemName);
                                                 cartQuantities.add(quantity);
                                                 cartCosts.add(itemCost * quantity);
@@ -161,7 +102,6 @@ public class StoreWithConfirmDialogue {
 
                                             totalCost += itemCost * quantity;
 
-                                            // Build a message for added items and updated cart
                                             StringBuilder addedItemsMessage = new StringBuilder(String.format("Added %d %s to your cart.\nYour cart contains:\n", quantity, itemName));
                                             for (int i = 0; i < cartItems.size(); i++) {
                                                 addedItemsMessage.append(cartItems.get(i))
@@ -171,7 +111,6 @@ public class StoreWithConfirmDialogue {
                                             }
                                             addedItemsMessage.append(String.format("Current total cost: PHP %.2f", totalCost));
 
-                                            // Show the message
                                             JOptionPane.showMessageDialog(null, addedItemsMessage.toString());
 
                                         } else {
@@ -180,7 +119,7 @@ public class StoreWithConfirmDialogue {
                                     }
                                 }
                                 case 1 -> {
-                                    // Remove item
+
                                     if (cartItems.isEmpty()) {
                                         JOptionPane.showMessageDialog(null, "Your cart is empty. There is nothing to remove.");
                                     } else {
@@ -193,7 +132,6 @@ public class StoreWithConfirmDialogue {
                                                 JOptionPane.PLAIN_MESSAGE,
                                                 null,
                                                 cartArray, null);
-
                                         if (removeChoice >= 0) {
                                             String removedItem = cartItems.get(removeChoice);
                                             double removedCost = cartCosts.get(removeChoice);
@@ -210,7 +148,6 @@ public class StoreWithConfirmDialogue {
                                     }
                                 }
                                 case 2 -> {
-                                    // "Exit" was selected
                                     Browsing = false;
                                     JOptionPane.showMessageDialog(null, "Exiting the bookstore.");
                                 }
@@ -219,32 +156,18 @@ public class StoreWithConfirmDialogue {
                                     JOptionPane.showMessageDialog(null, "Transaction canceled.");
                                 }
                             }
-
                             if (Browsing && !cartItems.isEmpty()) {
                                 int continueShopping = JOptionPane.showConfirmDialog(null, "Do you want to continue browsing?", "Continue", JOptionPane.YES_NO_OPTION);
-                                if (continueShopping == JOptionPane.YES_OPTION) {
-                                    Browsing = true;
-                                } else if (continueShopping == JOptionPane.NO_OPTION) {
-                                    Browsing = false;
-                                } else if (continueShopping == JOptionPane.CLOSED_OPTION) {
-                                    // Call the closeButton method
-                                    int kiujik = closeButton();
-                                    switch (kiujik) {
-                                        case -1: {
-                                            Browsing = true;
-                                            break;
-                                        }
-                                        case 0: {
-                                            break RUNNING;
-                                        }
-                                        case 1: {
-                                            Browsing = true;
-                                        }
+                                switch (continueShopping) {
+                                    case -1 -> {
+                                        break RUNNING;
                                     }
+                                    case 0 ->
+                                        Browsing = true;
+                                    case 1 ->
+                                        Browsing = false;
                                 }
-
                             }
-
                         } while (Browsing);
 
                         if (!cartItems.isEmpty()) {
@@ -277,7 +200,6 @@ public class StoreWithConfirmDialogue {
                                     }
                                 }
                             }
-
                             if (amountPaid >= totalCost) {
                                 totalTransactions++;
                                 allCost += totalCost;
@@ -310,37 +232,21 @@ public class StoreWithConfirmDialogue {
                     case 1 -> {
                         JOptionPane.showMessageDialog(null, "Thank you for stopping by, have a good day!");
                     }
-
                 }
 
-                int nextCus = nextcust();
-                switch (nextCus) {
+                int nextCustomerOption = JOptionPane.showConfirmDialog(null, "Next customer?", "", JOptionPane.YES_NO_OPTION);
+                switch (nextCustomerOption) {
                     case 0 -> {
                         nextCustomer = true;
                     }
                     case 1 -> {
                         nextCustomer = false;
                     }
-                    default -> {
-                        // Call the closeButton method
-                        int tertert = closeButton();
-                        switch (tertert) {
-                            case -1: {
-                                nextCustomer = true;
-                                break;
-                            }
-                            case 0: {
-                                break RUNNING;
-                            }
-                            case 1: {
-                                nextCustomer = true;
-                                break;
-                            }
-                        }
+                    case -1 -> {
+                        break RUNNING;
                     }
                 }
             } while (nextCustomer);
-            // Final end of day summary after processing all customers
             StringBuilder endOfDaySummary = new StringBuilder(String.format("End of day summary:\nTotal transactions: %d\nTotal sales: PHP %.2f\n\nSales Breakdown:\n", totalTransactions, allCost));
             for (int i = 0;
                     i < items.length;
@@ -354,100 +260,12 @@ public class StoreWithConfirmDialogue {
                             .append("\n");
                 }
             }
-
             JOptionPane.showMessageDialog(
                     null, endOfDaySummary.toString());
-            int dws = closeButton();
-            switch (dws) {
-                case -1: {
-                    program = true;
-                    break;
-                }
-                case 0: {
-                    break RUNNING;
-                }
-                case 1: {
-                    program = true;
-                    break;
-                }
-            }
-
+            break RUNNING;
         } while (program);
         {
             JOptionPane.showMessageDialog(null, "Thank you for using Karl's program.");
         }
-    }
-
-    public static int closeButton() {
-        int exitProg = JOptionPane.showConfirmDialog(null, "Do you want to exit the program?", "Close Button", JOptionPane.YES_NO_OPTION);
-
-        switch (exitProg) {
-            case -1: // User closed the dialog (clicked the "X" button)
-                JOptionPane.showMessageDialog(null, "You closed the dialog. Program will not exit.");
-                return -1; // Continue running the program
-
-            case 0: // User clicked "Yes"
-                JOptionPane.showMessageDialog(null, "You selected 'Yes'. Exiting the program.");
-                return 0; // Exit the program
-
-            case 1: // User clicked "No"
-                JOptionPane.showMessageDialog(null, "You selected 'No'. Continuing the program.");
-                return 1; // Continue running the program
-
-            default:
-                return 0; // Fallback to continue if something unexpected happens
-        }
-    }
-
-    public static int unfinished() {
-        int unfin = JOptionPane.showOptionDialog(
-                null,
-                "What would you like to do?",
-                "You still have items in your cart",
-                JOptionPane.DEFAULT_OPTION,
-                JOptionPane.PLAIN_MESSAGE,
-                null,
-                new String[]{"Check out", "Return Items and exit store"},
-                null);
-        switch (unfin) {
-            case -1: // User closed the dialog (clicked the "X" button)
-                JOptionPane.showMessageDialog(null, "You closed the dialog. Program will not exit.");
-                return -1; // Continue running the program
-
-            case 0: // User clicked "Yes"
-                JOptionPane.showMessageDialog(null, "Proceeding to check out");
-                return 0; // Exit the program
-
-            case 1: // User clicked "No"
-                JOptionPane.showMessageDialog(null, "All Items have been returned");
-                return 1; // Continue running the program
-
-            default:
-                return 0; // Fallback to continue if something unexpected happens
-        }
-    }
-
-    public static int nextcust() {
-        int nextCustomerOption = JOptionPane.showConfirmDialog(null, "Next customer?", "", JOptionPane.YES_NO_OPTION);
-        switch (nextCustomerOption) {
-            case 0 -> {
-                return 0;
-            }
-            case 1 -> {
-                return 1;
-            }
-            case -1 -> {
-                return -1;
-            }
-            default -> {
-                return 0;
-            }
-        }
-    }
-
-    public static void clearCart(ArrayList<String> cartItems, ArrayList<Integer> cartQuantities, ArrayList<Double> cartCosts) {
-        cartItems.clear();        // Clear all items from the cart
-        cartQuantities.clear();   // Clear all quantities from the cart
-        cartCosts.clear();        // Clear all costs from the cart
     }
 }
